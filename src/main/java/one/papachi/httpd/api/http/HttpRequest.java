@@ -10,19 +10,11 @@ public interface HttpRequest {
 
     interface Builder {
 
-        default Builder setRequestLine(String requestLine) {
-            String[] split = requestLine.split("\\s", 3);
-            setMethod(split[0].trim());
-            setPath(split[1].trim());
-            setVersion(split[2].trim());
-            return this;
-        }
-
-        Builder setMethod(String method);
+        Builder setMethod(HttpMethod method);
 
         Builder setPath(String path);
 
-        Builder setVersion(String version);
+        Builder setVersion(HttpVersion version);
 
         Builder addParameter(String name, String value);
 
@@ -63,38 +55,11 @@ public interface HttpRequest {
 
     }
 
-    default String getRequestLine() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(getMethod());
-        stringBuilder.append(" ");
-        stringBuilder.append(getPath());
-        if (!getParameters().isEmpty())
-            stringBuilder.append('?');
-        for (Map.Entry<String, List<String>> entry : getParameters().entrySet()) {
-            String name = entry.getKey();
-            List<String> values = entry.getValue();
-            int counter = 0;
-            for (String value : values) {
-                if (counter++ > 0) {
-                    stringBuilder.append('&');
-                }
-                name = URLEncoder.encode(name, StandardCharsets.UTF_8);
-                value = URLEncoder.encode(value, StandardCharsets.UTF_8);
-                stringBuilder.append(name);
-                stringBuilder.append('=');
-                stringBuilder.append(value);
-            }
-        }
-        stringBuilder.append(" ");
-        stringBuilder.append(getVersion());
-        return stringBuilder.toString();
-    }
-
-    String getMethod();
+    HttpMethod getMethod();
 
     String getPath();
 
-    String getVersion();
+    HttpVersion getVersion();
 
     Map<String, List<String>> getParameters();
 

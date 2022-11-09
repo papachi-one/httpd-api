@@ -17,15 +17,7 @@ public interface HttpResponse {
 
     interface Builder {
 
-        default Builder setStatusLine(String statusLine) {
-            String[] split = statusLine.split("\\s", 3);
-            setVersion(split[0].trim());
-            setStatusCode(Integer.parseInt(split[1].trim()));
-            setReasonPhrase(split[2].trim());
-            return this;
-        }
-
-        Builder setVersion(String version);
+        Builder setVersion(HttpVersion version);
 
         Builder setStatusCode(int statusCode);
 
@@ -89,11 +81,7 @@ public interface HttpResponse {
 
     }
 
-    default String getStatusLine() {
-        return getVersion() + " " + getStatusCode() + " " + getReasonPhrase();
-    }
-
-    String getVersion();
+    HttpVersion getVersion();
 
     int getStatusCode();
 
