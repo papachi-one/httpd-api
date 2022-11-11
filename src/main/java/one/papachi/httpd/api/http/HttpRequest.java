@@ -1,7 +1,16 @@
 package one.papachi.httpd.api.http;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URLEncoder;
+import java.nio.channels.AsynchronousByteChannel;
+import java.nio.channels.AsynchronousFileChannel;
+import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +59,37 @@ public interface HttpRequest {
         }
 
         Builder setBody(HttpBody body);
+
+        Builder setBody(AsynchronousByteChannel channel);
+
+        Builder setBody(AsynchronousFileChannel channel);
+
+        Builder setBody(ReadableByteChannel channel);
+
+        Builder setBody(InputStream inputStream);
+
+        default Builder setBody(Path path) {
+            try {
+                setBody(AsynchronousFileChannel.open(path, StandardOpenOption.READ));
+            } catch (IOException e) {
+            }
+            return this;
+        }
+
+        default Builder setBody(File file) {
+            setBody(file.toPath());
+            return this;
+        }
+
+        default Builder setBody(String string) {
+            setBody(new ByteArrayInputStream(string.getBytes(StandardCharsets.UTF_8)));
+            return this;
+        }
+
+        default Builder setBody(byte[] bytes) {
+            setBody(new ByteArrayInputStream(bytes));
+            return this;
+        }
 
         HttpRequest build();
 

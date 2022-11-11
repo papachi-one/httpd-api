@@ -1,9 +1,9 @@
 package one.papachi.httpd.api.http;
 
-import java.util.concurrent.CompletionStage;
+import java.util.concurrent.CompletableFuture;
 
 public interface HttpHandler {
 
-    CompletionStage<HttpResponse> handle(HttpRequest request);
+    CompletableFuture<HttpResponse> handle(HttpRequest request);
 
 }
