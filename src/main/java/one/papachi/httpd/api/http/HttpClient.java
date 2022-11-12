@@ -1,19 +1,13 @@
 package one.papachi.httpd.api.http;
 
-import java.util.Set;
+import java.net.URL;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 
-public interface HttpClient {
+public interface HttpClient extends HttpOptions {
 
-    CompletableFuture<HttpResponse> send(String host, int port, boolean https, HttpRequest request);
+    CompletableFuture<HttpResponse> send(URL url, HttpRequest request);
 
     ExecutorService getExecutorService();
-
-    Set<HttpOption<?>> supportedOptions();
-
-    <T> T getOption(HttpOption<T> name);
-
-    <T> HttpClient setOption(HttpOption<T> name, T value);
 
 }
