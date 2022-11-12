@@ -1,5 +1,5 @@
 package one.papachi.httpd.api.websocket;
 
-public interface WebSocketDataHandler {
+public interface WebSocketListener {
 
 }

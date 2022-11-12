@@ -1,6 +1,6 @@
 package one.papachi.httpd.api.websocket;
 
-public interface WebSocketMessageHandler extends WebSocketDataHandler {
+public interface WebSocketMessageListener extends WebSocketListener {
 
     void onMessage(WebSocketMessage message);
 

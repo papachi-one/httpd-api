@@ -1,6 +1,6 @@
 package one.papachi.httpd.api.websocket;
 
-public interface WebSocketStreamHandler extends WebSocketDataHandler {
+public interface WebSocketStreamListener extends WebSocketListener {
 
     void onStream(WebSocketStream stream);
 

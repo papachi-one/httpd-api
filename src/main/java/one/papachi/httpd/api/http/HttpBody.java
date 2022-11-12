@@ -31,6 +31,8 @@ public interface HttpBody extends AsynchronousByteChannel {
 
         Builder empty();
 
+        Builder length(long length);
+
         Builder input(AsynchronousByteChannel channel);
 
         Builder input(AsynchronousFileChannel channel);
@@ -77,9 +79,5 @@ public interface HttpBody extends AsynchronousByteChannel {
     default <A> void write(ByteBuffer src, A attachment, CompletionHandler<Integer, ? super A> handler) {
         throw new UnsupportedOperationException();
     }
-
-    ReadableByteChannel getByteChannel();
-
-    InputStream getInputStream();
 
 }

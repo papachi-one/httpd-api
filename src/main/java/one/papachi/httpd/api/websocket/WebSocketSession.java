@@ -1,24 +1,25 @@
 package one.papachi.httpd.api.websocket;
 
-import java.nio.channels.CompletionHandler;
-import java.util.concurrent.Future;
+import one.papachi.httpd.api.http.HttpRequest;
+
+import java.nio.ByteBuffer;
+import java.nio.channels.AsynchronousByteChannel;
+import java.util.concurrent.CompletableFuture;
 
 public interface WebSocketSession {
 
-    WebSocketConnection getWebSocketConnection();
+    HttpRequest getRequest();
 
-    WebSocketDataHandler getHandler();
+    WebSocketListener getListener();
 
-    void setHandler(WebSocketDataHandler handler);
+    void setListener(WebSocketListener listener);
 
-    boolean isClosed();
+    void sendClose();
 
-    Future<Integer> sendWebSocketMessage(WebSocketMessage message);
+    CompletableFuture<WebSocketSession> send(ByteBuffer src);
 
-    <A> void sendWebSocketMessage(WebSocketMessage message, A attachment, CompletionHandler<Integer, ? super A> handler);
+    CompletableFuture<WebSocketSession> send(AsynchronousByteChannel src);
 
-    Future<Void> sendWebSocketFrame(WebSocketFrame frame);
-
-    <A> void sendWebSocketFrame(WebSocketFrame frame, A attachment, CompletionHandler<Void, ? super A> handler);
+    CompletableFuture<WebSocketSession> send(WebSocketFrame src);
 
 }

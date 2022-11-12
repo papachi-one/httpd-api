@@ -1,6 +1,6 @@
 package one.papachi.httpd.api.websocket;
 
-public interface WebSocketFrameHandler extends WebSocketDataHandler {
+public interface WebSocketFrameListener extends WebSocketListener {
 
     void onFrame(WebSocketFrame frame);
 
