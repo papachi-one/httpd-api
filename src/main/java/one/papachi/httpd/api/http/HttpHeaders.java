@@ -7,19 +7,19 @@ public interface HttpHeaders {
 
     interface Builder {
 
-        Builder addHeaderLine(String line);
+        Builder headerLine(String line);
 
-        Builder addHeader(HttpHeader header);
+        Builder header(HttpHeader header);
 
-        Builder addHeader(String name, String value);
+        Builder header(String name, String value);
 
-        default Builder addHeader(String name, List<String> values) {
-            values.forEach(value -> addHeader(name, value));
+        default Builder header(String name, List<String> values) {
+            values.forEach(value -> header(name, value));
             return this;
         }
 
-        default Builder addHeader(String name, String[] values) {
-            addHeader(name, Arrays.asList(values));
+        default Builder header(String name, String[] values) {
+            header(name, Arrays.asList(values));
             return this;
         }
 

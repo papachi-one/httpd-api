@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URLEncoder;
 import java.nio.channels.AsynchronousByteChannel;
 import java.nio.channels.AsynchronousFileChannel;
 import java.nio.channels.ReadableByteChannel;
@@ -19,75 +18,140 @@ public interface HttpRequest {
 
     interface Builder {
 
-        Builder setMethod(HttpMethod method);
-
-        Builder setPath(String path);
-
-        Builder setVersion(HttpVersion version);
-
-        Builder addParameter(String name, String value);
-
-        default Builder addParameter(String name, List<String> values) {
-            values.forEach(value -> addParameter(name, value));
+        default Builder GET() {
+            method(HttpMethod.GET);
             return this;
         }
 
-        default Builder addParameter(String name, String[] values) {
-            addParameter(name, Arrays.asList(values));
+        default Builder HEAD() {
+            method(HttpMethod.HEAD);
             return this;
         }
 
-        Builder addHeaderLine(String line);
-
-        Builder addHeader(HttpHeader header);
-
-        Builder addHeader(String name, String value);
-
-        default Builder addHeader(String name, List<String> values) {
-            values.forEach(value -> addHeader(name, value));
+        default Builder POST() {
+            method(HttpMethod.POST);
             return this;
         }
 
-        default Builder addHeader(String name, String[] values) {
-            addHeader(name, Arrays.asList(values));
+        default Builder PUT() {
+            method(HttpMethod.PUT);
             return this;
         }
 
-        default Builder setHeaders(HttpHeaders headers) {
-            headers.getHeaders().forEach(this::addHeader);
+        default Builder DELETE() {
+            method(HttpMethod.DELETE);
             return this;
         }
 
-        Builder setBody(HttpBody body);
+        default Builder CONNECT() {
+            method(HttpMethod.CONNECT);
+            return this;
+        }
 
-        Builder setBody(AsynchronousByteChannel channel);
+        default Builder OPTIONS() {
+            method(HttpMethod.OPTIONS);
+            return this;
+        }
 
-        Builder setBody(AsynchronousFileChannel channel);
+        default Builder TRACE() {
+            method(HttpMethod.TRACE);
+            return this;
+        }
 
-        Builder setBody(ReadableByteChannel channel);
+        default Builder PATCH() {
+            method(HttpMethod.PATCH);
+            return this;
+        }
 
-        Builder setBody(InputStream inputStream);
+        Builder method(HttpMethod method);
 
-        default Builder setBody(Path path) {
+        Builder path(String path);
+
+        default Builder http0() {
+            version(HttpVersion.HTTP_1_0);
+            return this;
+        }
+
+        default Builder http1() {
+            version(HttpVersion.HTTP_1_1);
+            return this;
+        }
+
+        default Builder http2() {
+            version(HttpVersion.HTTP_2);
+            return this;
+        }
+
+        default Builder httpAny() {
+            version(HttpVersion.AUTO);
+            return this;
+        }
+
+        Builder version(HttpVersion version);
+
+        Builder parameter(String name, String value);
+
+        default Builder parameter(String name, List<String> values) {
+            values.forEach(value -> parameter(name, value));
+            return this;
+        }
+
+        default Builder parameter(String name, String[] values) {
+            parameter(name, Arrays.asList(values));
+            return this;
+        }
+
+        Builder headerLine(String line);
+
+        Builder header(HttpHeader header);
+
+        Builder header(String name, String value);
+
+        default Builder header(String name, List<String> values) {
+            values.forEach(value -> header(name, value));
+            return this;
+        }
+
+        default Builder header(String name, String[] values) {
+            header(name, Arrays.asList(values));
+            return this;
+        }
+
+        default Builder headers(HttpHeaders headers) {
+            headers.getHeaders().forEach(this::header);
+            return this;
+        }
+
+        Builder body(HttpBody body);
+
+        Builder body(AsynchronousByteChannel channel);
+
+        Builder body(AsynchronousFileChannel channel);
+
+        Builder body(ReadableByteChannel channel);
+
+        Builder body(InputStream inputStream);
+
+        default Builder body(Path path) {
             try {
-                setBody(AsynchronousFileChannel.open(path, StandardOpenOption.READ));
+                body(AsynchronousFileChannel.open(path, StandardOpenOption.READ));
             } catch (IOException e) {
             }
             return this;
         }
 
-        default Builder setBody(File file) {
-            setBody(file.toPath());
+        default Builder body(File file) {
+            body(file.toPath());
             return this;
         }
 
-        default Builder setBody(String string) {
-            setBody(new ByteArrayInputStream(string.getBytes(StandardCharsets.UTF_8)));
+        default Builder body(String string) {
+            body(new ByteArrayInputStream(string.getBytes(StandardCharsets.UTF_8)));
             return this;
         }
 
-        default Builder setBody(byte[] bytes) {
-            setBody(new ByteArrayInputStream(bytes));
+        default Builder body(byte[] bytes) {
+            body(new ByteArrayInputStream(bytes));
             return this;
         }
 

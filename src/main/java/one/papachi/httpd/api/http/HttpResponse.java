@@ -17,63 +17,88 @@ public interface HttpResponse {
 
     interface Builder {
 
-        Builder setVersion(HttpVersion version);
-
-        Builder setStatusCode(int statusCode);
-
-        Builder setReasonPhrase(String reasonPhrase);
-
-        Builder addHeaderLine(String line);
-
-        Builder addHeader(HttpHeader header);
-
-        Builder addHeader(String name, String value);
-
-        default Builder addHeader(String name, List<String> values) {
-            values.forEach(value -> addHeader(name, value));
+        default Builder http0() {
+            version(HttpVersion.HTTP_1_0);
             return this;
         }
 
-        default Builder addHeader(String name, String[] values) {
-            addHeader(name, Arrays.asList(values));
+        default Builder http1() {
+            version(HttpVersion.HTTP_1_1);
+            return this;
+        }
+
+        default Builder http2() {
+            version(HttpVersion.HTTP_2);
+            return this;
+        }
+
+        Builder version(HttpVersion version);
+
+        Builder statusCode(int statusCode);
+
+        Builder reasonPhrase(String reasonPhrase);
+
+        default Builder status(int statusCode, String reasonPhrase) {
+            statusCode(statusCode).reasonPhrase(reasonPhrase);
+            return this;
+        }
+
+        default Builder status(HttpStatus status) {
+            statusCode(status.getStatusCode()).reasonPhrase(status.getReasonPhrase());
+            return this;
+        }
+
+        Builder headerLine(String line);
+
+        Builder header(HttpHeader header);
+
+        Builder header(String name, String value);
+
+        default Builder header(String name, List<String> values) {
+            values.forEach(value -> header(name, value));
+            return this;
+        }
+
+        default Builder header(String name, String[] values) {
+            header(name, Arrays.asList(values));
             return this;
         }
 
         default Builder setHeaders(HttpHeaders headers) {
-            headers.getHeaders().forEach(this::addHeader);
+            headers.getHeaders().forEach(this::header);
             return this;
         }
 
-        Builder setBody(HttpBody body);
+        Builder body(HttpBody body);
 
-        Builder setBody(AsynchronousByteChannel channel);
+        Builder body(AsynchronousByteChannel channel);
 
-        Builder setBody(AsynchronousFileChannel channel);
+        Builder body(AsynchronousFileChannel channel);
 
-        Builder setBody(ReadableByteChannel channel);
+        Builder body(ReadableByteChannel channel);
 
-        Builder setBody(InputStream inputStream);
+        Builder body(InputStream inputStream);
 
-        default Builder setBody(Path path) {
+        default Builder body(Path path) {
             try {
-                setBody(AsynchronousFileChannel.open(path, StandardOpenOption.READ));
+                body(AsynchronousFileChannel.open(path, StandardOpenOption.READ));
             } catch (IOException e) {
             }
             return this;
         }
 
-        default Builder setBody(File file) {
-            setBody(file.toPath());
+        default Builder body(File file) {
+            body(file.toPath());
             return this;
         }
 
-        default Builder setBody(String string) {
-            setBody(new ByteArrayInputStream(string.getBytes(StandardCharsets.UTF_8)));
+        default Builder body(String string) {
+            body(new ByteArrayInputStream(string.getBytes(StandardCharsets.UTF_8)));
             return this;
         }
 
-        default Builder setBody(byte[] bytes) {
-            setBody(new ByteArrayInputStream(bytes));
+        default Builder body(byte[] bytes) {
+            body(new ByteArrayInputStream(bytes));
             return this;
         }
 

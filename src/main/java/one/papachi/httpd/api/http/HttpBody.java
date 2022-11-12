@@ -5,6 +5,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousByteChannel;
@@ -13,42 +14,43 @@ import java.nio.channels.CompletionHandler;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.concurrent.Future;
 
 public interface HttpBody extends AsynchronousByteChannel {
 
     interface Builder {
 
-        Builder setEmpty();
+        Builder empty();
 
-        Builder setInput(AsynchronousByteChannel channel);
+        Builder input(AsynchronousByteChannel channel);
 
-        Builder setInput(AsynchronousFileChannel channel);
+        Builder input(AsynchronousFileChannel channel);
 
-        Builder setInput(ReadableByteChannel channel);
+        Builder input(ReadableByteChannel channel);
 
-        Builder setInput(InputStream inputStream);
+        Builder input(InputStream inputStream);
 
-        default Builder setInput(Path path) {
-            setInput(path.toFile());
-            return this;
-        }
-
-        default Builder setInput(File file) {
+        default Builder input(Path path) {
             try {
-                setInput(new FileInputStream(file));
-            } catch (FileNotFoundException e) {
+                input(AsynchronousFileChannel.open(path, StandardOpenOption.READ));
+            } catch (IOException e) {
             }
             return this;
         }
 
-        default Builder setInput(String string) {
-            setInput(new ByteArrayInputStream(string.getBytes(StandardCharsets.UTF_8)));
+        default Builder input(File file) {
+            input(file.toPath());
             return this;
         }
 
-        default Builder setInput(byte[] bytes) {
-            setInput(new ByteArrayInputStream(bytes));
+        default Builder input(String string) {
+            input(new ByteArrayInputStream(string.getBytes(StandardCharsets.UTF_8)));
+            return this;
+        }
+
+        default Builder input(byte[] bytes) {
+            input(new ByteArrayInputStream(bytes));
             return this;
         }
 

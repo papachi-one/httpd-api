@@ -4,18 +4,18 @@ public interface HttpHeader {
 
     interface Builder {
 
-        default Builder setHeaderLine(String line) {
+        default Builder headerLine(String line) {
             String[] split = line.split(":\\s+", 2);
             String name = split[0].trim();
             String value = split.length == 2 ? split[1].trim() : "";
-            setName(name);
-            setValue(value);
+            name(name);
+            value(value);
             return this;
         }
 
-        Builder setName(String name);
+        Builder name(String name);
 
-        Builder setValue(String value);
+        Builder value(String value);
 
         HttpHeader build();
 
