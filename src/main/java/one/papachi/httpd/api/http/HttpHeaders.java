@@ -1,9 +1,17 @@
 package one.papachi.httpd.api.http;
 
+import one.papachi.httpd.api.spi.HttpClientProvider;
+import one.papachi.httpd.api.spi.HttpDataProvider;
+
 import java.util.Arrays;
 import java.util.List;
+import java.util.ServiceLoader;
 
 public interface HttpHeaders {
+
+    static HttpHeaders.Builder getBuilder() {
+        return ServiceLoader.load(HttpDataProvider.class).findFirst().map(HttpDataProvider::getHttpHeadersBuilder).orElse(null);
+    }
 
     interface Builder {
 

@@ -1,6 +1,9 @@
 package one.papachi.httpd.api.http;
 
 
+import one.papachi.httpd.api.spi.HttpClientProvider;
+import one.papachi.httpd.api.spi.HttpDataProvider;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,9 +18,14 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.ServiceLoader;
 import java.util.concurrent.Future;
 
 public interface HttpBody extends AsynchronousByteChannel {
+
+    static HttpBody.Builder getBuilder() {
+        return ServiceLoader.load(HttpDataProvider.class).findFirst().map(HttpDataProvider::getHttpBodyBuilder).orElse(null);
+    }
 
     interface Builder {
 

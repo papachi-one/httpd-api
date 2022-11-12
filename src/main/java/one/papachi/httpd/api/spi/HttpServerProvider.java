@@ -9,16 +9,6 @@ import one.papachi.httpd.api.http.HttpServer;
 
 public interface HttpServerProvider {
 
-    HttpServer getHttpServerInstance();
-
-    HttpRequest.Builder getHttpRequestBuilder();
-
-    HttpResponse.Builder getHttpResponseBuilder();
-
-    HttpHeaders.Builder getHttpHeadersBuilder();
-
-    HttpHeader.Builder getHttpHeaderBuilder();
-
-    HttpBody.Builder getHttpBodyBuilder();
+    HttpServer getHttpServer();
 
 }

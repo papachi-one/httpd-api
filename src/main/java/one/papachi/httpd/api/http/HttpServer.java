@@ -6,16 +6,13 @@ import one.papachi.httpd.api.websocket.WebSocketHandler;
 
 import java.nio.channels.AsynchronousServerSocketChannel;
 import java.util.ServiceLoader;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 
 public interface HttpServer extends HttpOptions {
 
     static HttpServer getInstance() {
-        return ServiceLoader.load(HttpServerProvider.class).findFirst().map(HttpServerProvider::getHttpServerInstance).orElse(null);
+        return ServiceLoader.load(HttpServerProvider.class).findFirst().map(HttpServerProvider::getHttpServer).orElse(null);
     }
-
-    ExecutorService getExecutorService();
 
     AsynchronousServerSocketChannel getServerSocketChannel();
 

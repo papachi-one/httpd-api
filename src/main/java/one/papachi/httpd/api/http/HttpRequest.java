@@ -1,5 +1,8 @@
 package one.papachi.httpd.api.http;
 
+import one.papachi.httpd.api.spi.HttpClientProvider;
+import one.papachi.httpd.api.spi.HttpDataProvider;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -13,8 +16,13 @@ import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.ServiceLoader;
 
 public interface HttpRequest {
+
+    static HttpRequest.Builder getBuilder() {
+        return ServiceLoader.load(HttpDataProvider.class).findFirst().map(HttpDataProvider::getHttpRequestBuilder).orElse(null);
+    }
 
     interface Builder {
 

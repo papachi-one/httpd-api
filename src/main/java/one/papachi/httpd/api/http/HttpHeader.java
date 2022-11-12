@@ -1,6 +1,15 @@
 package one.papachi.httpd.api.http;
 
+import one.papachi.httpd.api.spi.HttpClientProvider;
+import one.papachi.httpd.api.spi.HttpDataProvider;
+
+import java.util.ServiceLoader;
+
 public interface HttpHeader {
+
+    static HttpHeader.Builder getBuilder() {
+        return ServiceLoader.load(HttpDataProvider.class).findFirst().map(HttpDataProvider::getHttpHeaderBuilder).orElse(null);
+    }
 
     interface Builder {
 
