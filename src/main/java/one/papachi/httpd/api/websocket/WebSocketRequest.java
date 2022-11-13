@@ -133,7 +133,7 @@ public interface WebSocketRequest extends HttpRequest {
         }
 
         default Builder httpAny() {
-            version(HttpVersion.AUTO);
+            version(HttpVersion.ANY);
             return this;
         }
 

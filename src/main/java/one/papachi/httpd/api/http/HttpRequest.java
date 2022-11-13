@@ -1,6 +1,5 @@
 package one.papachi.httpd.api.http;
 
-import one.papachi.httpd.api.spi.HttpClientProvider;
 import one.papachi.httpd.api.spi.HttpDataProvider;
 
 import java.io.ByteArrayInputStream;
@@ -164,7 +163,7 @@ public interface HttpRequest {
         }
 
         default Builder httpAny() {
-            version(HttpVersion.AUTO);
+            version(HttpVersion.ANY);
             return this;
         }
 
