@@ -1,7 +1,9 @@
 package one.papachi.httpd.api.websocket;
 
+import java.util.concurrent.CompletableFuture;
+
 public interface WebSocketMessageListener extends WebSocketListener {
 
-    void onMessage(WebSocketMessage message);
+    CompletableFuture<Void> onMessage(WebSocketMessage message);
 
 }

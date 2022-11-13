@@ -56,7 +56,7 @@ public interface WebSocketFrame extends WebSocketData {
 
         Builder length(long length);
 
-        Builder mask(byte[] mask);
+        Builder maskingKey(byte[] mask);
 
         Builder payload();
 
@@ -110,6 +110,6 @@ public interface WebSocketFrame extends WebSocketData {
 
     long getLength();
 
-    byte[] getMask();
+    byte[] getMaskingKey();
 
 }

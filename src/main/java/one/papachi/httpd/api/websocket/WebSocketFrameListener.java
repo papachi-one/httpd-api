@@ -1,7 +1,9 @@
 package one.papachi.httpd.api.websocket;
 
+import java.util.concurrent.CompletableFuture;
+
 public interface WebSocketFrameListener extends WebSocketListener {
 
-    void onFrame(WebSocketFrame frame);
+    CompletableFuture<Void> onFrame(WebSocketFrame frame);
 
 }

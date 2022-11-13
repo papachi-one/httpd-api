@@ -1,7 +1,9 @@
 package one.papachi.httpd.api.websocket;
 
+import java.util.concurrent.CompletableFuture;
+
 public interface WebSocketStreamListener extends WebSocketListener {
 
-    void onStream(WebSocketStream stream);
+    CompletableFuture<Void> onStream(WebSocketStream stream);
 
 }
