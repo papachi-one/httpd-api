@@ -2,7 +2,6 @@ package one.papachi.httpd.api.http;
 
 import one.papachi.httpd.api.spi.HttpClientProvider;
 
-import java.net.URL;
 import java.util.ServiceLoader;
 import java.util.concurrent.CompletableFuture;
 
@@ -20,11 +19,10 @@ public interface HttpClient extends HttpOptions {
 
     /**
      * Sends an HTTP Request to a remote server specified in URL. Method return CompletableFuture holding HTTP Response from server.
-     * @param url
      * @param request
      * @return CompletableFuture holding future result (HTTP Response) to an HTTP Request send to a server specified in URL
      */
-    CompletableFuture<HttpResponse> send(URL url, HttpRequest request);
+    CompletableFuture<HttpResponse> send(HttpRequest request);
 
     /**
      * Closes all idle connections made to remote server(s).

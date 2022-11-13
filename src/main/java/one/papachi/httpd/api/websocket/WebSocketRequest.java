@@ -1,32 +1,26 @@
-package one.papachi.httpd.api.http;
+package one.papachi.httpd.api.websocket;
 
-import one.papachi.httpd.api.spi.HttpClientProvider;
-import one.papachi.httpd.api.spi.HttpDataProvider;
+import one.papachi.httpd.api.http.HttpBody;
+import one.papachi.httpd.api.http.HttpHeader;
+import one.papachi.httpd.api.http.HttpHeaders;
+import one.papachi.httpd.api.http.HttpMethod;
+import one.papachi.httpd.api.http.HttpRequest;
+import one.papachi.httpd.api.http.HttpVersion;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.net.URL;
 import java.nio.channels.AsynchronousByteChannel;
 import java.nio.channels.AsynchronousFileChannel;
 import java.nio.channels.ReadableByteChannel;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.ServiceLoader;
 
-public interface HttpRequest {
+public interface WebSocketRequest extends HttpRequest {
 
-    static HttpRequest.Builder getBuilder() {
-        return ServiceLoader.load(HttpDataProvider.class).findFirst().map(HttpDataProvider::getHttpRequestBuilder).orElse(null);
-    }
-
-    interface Builder {
+    interface Builder extends HttpRequest.Builder {
 
         default Builder server(String host, int port) {
             server(new InetSocketAddress(host, port));
@@ -52,51 +46,35 @@ public interface HttpRequest {
         }
 
         default Builder HEAD(URL url) {
-            url(url);
-            method(HttpMethod.HEAD);
-            return this;
+            throw new UnsupportedOperationException();
         }
 
         default Builder POST(URL url) {
-            url(url);
-            method(HttpMethod.POST);
-            return this;
+            throw new UnsupportedOperationException();
         }
 
         default Builder PUT(URL url) {
-            url(url);
-            method(HttpMethod.PUT);
-            return this;
+            throw new UnsupportedOperationException();
         }
 
         default Builder DELETE(URL url) {
-            url(url);
-            method(HttpMethod.DELETE);
-            return this;
+            throw new UnsupportedOperationException();
         }
 
         default Builder CONNECT(URL url) {
-            url(url);
-            method(HttpMethod.CONNECT);
-            return this;
+            throw new UnsupportedOperationException();
         }
 
         default Builder OPTIONS(URL url) {
-            url(url);
-            method(HttpMethod.OPTIONS);
-            return this;
+            throw new UnsupportedOperationException();
         }
 
         default Builder TRACE(URL url) {
-            url(url);
-            method(HttpMethod.TRACE);
-            return this;
+            throw new UnsupportedOperationException();
         }
 
         default Builder PATCH(URL url) {
-            url(url);
-            method(HttpMethod.PATCH);
-            return this;
+            throw new UnsupportedOperationException();
         }
 
         default Builder GET() {
@@ -105,43 +83,35 @@ public interface HttpRequest {
         }
 
         default Builder HEAD() {
-            method(HttpMethod.HEAD);
-            return this;
+            throw new UnsupportedOperationException();
         }
 
         default Builder POST() {
-            method(HttpMethod.POST);
-            return this;
+            throw new UnsupportedOperationException();
         }
 
         default Builder PUT() {
-            method(HttpMethod.PUT);
-            return this;
+            throw new UnsupportedOperationException();
         }
 
         default Builder DELETE() {
-            method(HttpMethod.DELETE);
-            return this;
+            throw new UnsupportedOperationException();
         }
 
         default Builder CONNECT() {
-            method(HttpMethod.CONNECT);
-            return this;
+            throw new UnsupportedOperationException();
         }
 
         default Builder OPTIONS() {
-            method(HttpMethod.OPTIONS);
-            return this;
+            throw new UnsupportedOperationException();
         }
 
         default Builder TRACE() {
-            method(HttpMethod.TRACE);
-            return this;
+            throw new UnsupportedOperationException();
         }
 
         default Builder PATCH() {
-            method(HttpMethod.PATCH);
-            return this;
+            throw new UnsupportedOperationException();
         }
 
         Builder method(HttpMethod method);
@@ -149,8 +119,7 @@ public interface HttpRequest {
         Builder path(String path);
 
         default Builder http0() {
-            version(HttpVersion.HTTP_1_0);
-            return this;
+            throw new UnsupportedOperationException();
         }
 
         default Builder http1() {
@@ -203,81 +172,44 @@ public interface HttpRequest {
             return this;
         }
 
-        Builder body(HttpBody body);
+        default Builder body(HttpBody body) {
+            throw new UnsupportedOperationException();
+        }
 
-        Builder body(AsynchronousByteChannel channel);
+        default Builder body(AsynchronousByteChannel channel) {
+            throw new UnsupportedOperationException();
+        }
 
-        Builder body(AsynchronousFileChannel channel);
+        default Builder body(AsynchronousFileChannel channel) {
+            throw new UnsupportedOperationException();
+        }
 
-        Builder body(ReadableByteChannel channel);
+        default Builder body(ReadableByteChannel channel) {
+            throw new UnsupportedOperationException();
+        }
 
-        Builder body(InputStream inputStream);
+        default Builder body(InputStream inputStream) {
+            throw new UnsupportedOperationException();
+        }
 
         default Builder body(Path path) {
-            try {
-                body(AsynchronousFileChannel.open(path, StandardOpenOption.READ));
-            } catch (IOException e) {
-            }
-            return this;
+            throw new UnsupportedOperationException();
         }
 
         default Builder body(File file) {
-            body(file.toPath());
-            return this;
+            throw new UnsupportedOperationException();
         }
 
         default Builder body(String string) {
-            body(new ByteArrayInputStream(string.getBytes(StandardCharsets.UTF_8)));
-            return this;
+            throw new UnsupportedOperationException();
         }
 
         default Builder body(byte[] bytes) {
-            body(new ByteArrayInputStream(bytes));
-            return this;
+            throw new UnsupportedOperationException();
         }
 
-        HttpRequest build();
+        WebSocketRequest build();
 
     }
-
-    InetSocketAddress getServer();
-
-    String getScheme();
-
-    HttpMethod getMethod();
-
-    String getPath();
-
-    HttpVersion getVersion();
-
-    Map<String, List<String>> getParameters();
-
-    String getParameterValue(String name);
-
-    List<String> getParameterValues(String name);
-
-    HttpHeaders getHttpHeaders();
-
-    default List<HttpHeader> getHeaders() {
-        return getHttpHeaders().getHeaders();
-    }
-
-    default HttpHeader getHeader(String name) {
-        return getHttpHeaders().getHeader(name);
-    }
-
-    default List<HttpHeader> getHeaders(String name) {
-        return getHttpHeaders().getHeaders(name);
-    }
-
-    default String getHeaderValue(String name) {
-        return getHttpHeaders().getHeaderValue(name);
-    }
-
-    default List<String> getHeaderValues(String name) {
-        return getHttpHeaders().getHeaderValues(name);
-    }
-
-    HttpBody getHttpBody();
 
 }
